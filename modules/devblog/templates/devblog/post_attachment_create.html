@@ -1,0 +1,93 @@
+{% load static %}
+<head>
+  {{ form.media }}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="{% static '/css/materialize.css' %}" rel="stylesheet">
+  <link href="/static/martor/css/martor.semantic.css" type="text/css" media="all" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+<style>
+</style>
+</head>
+
+
+<body>
+
+
+    <nav>
+    <div class="nav-wrapper primary" style="margin-top: 5vh;">
+      <a href="#!" class="brand-logo">Logo</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">Javascript</a></li>
+        <li><a href="mobile.html">Mobile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="sass.html">Sass</a></li>
+    <li><a href="badges.html">Components</a></li>
+    <li><a href="collapsible.html">Javascript</a></li>
+    <li><a href="mobile.html">Mobile</a></li>
+  </ul>
+
+
+
+
+
+    <form action="" method="post" enctype="multipart/form-data" id="myForm">
+      {% csrf_token %}
+      {{ form.management_form }}
+      {{ form.non_form_errors }}
+      {% for field in form %}
+        {{ field.label_tag }} {{ field }}
+        <hr>
+      {% endfor %}
+    
+        <table border="0" cellpadding="0" cellspacing="0">
+            <thead>Attachments:</thead>
+            <tbody>
+                {% for form in attachment_form.forms %}
+                {{ form.errors }}
+                <tr>
+                   <td>
+                      {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                      {{ form.attachment }}
+                   </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        {{ attachment_form.management_form }}
+      <p>
+        <button class="ui primary button" type="submit">Add post</button>
+      </p>
+    </form>
+    <a class="waves-effect waves-light primary-color btn">button</a>
+    <a class="waves-effect waves-light primary-color btn">button</a>
+    <a class="waves-effect waves-light primary btn">button</a>
+    <a class="waves-effect waves-light yellow darken-3 btn">button</a>
+</body>
+
+
+<script src={% static '/martor/js/martor.semantic.js' %}></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src={% static 'js/jquery.formset.js' %}></script>
+<script src="/static/js/materialize.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#myForm tbody tr').formset({
+            prefix: '{{ attachment_form.prefix }}'
+        });
+    })
+$(document).ready(function(){
+    $('.sidenav').sidenav();
+  });
+</script>
