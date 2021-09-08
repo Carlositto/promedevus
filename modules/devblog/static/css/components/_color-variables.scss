@@ -2,9 +2,41 @@
 
 $primary: (
   "base":       #ffd23f,
+  "lighten-5":  #ffd23f,
+  "lighten-4":  #ffd23f,
+  "lighten-3":  #ffd23f,
   "lighten-2":  #ffd23f,
+  "lighten-1":  #ffd23f,
+  "darken-1":   #ffd23f,
+  "darken-2":   #ffd23f,
+  "darken-3":   #ffd23f,
+  "darken-4":   #ffd23f,
+  "accent-1":    #ffd23f,
+  "accent-2":    #ffd23f,
+  "accent-3":    #ffd23f,
+  "accent-4":    #ffd23f
 );
 
+$secondary: (
+  "base":       #403d39,
+  "lighten-2":  #403d39,
+);
+
+
+$secondary-dark: (
+  "base":       #868583,
+  "lighten-2":  #868583,
+);
+
+$secondary-light: (
+  "base":       #cccccc,
+  "lighten-2":  #cccccc,
+);
+
+$accent: (
+  "base":       #fe4e00,
+  "lighten-2":  #fe4e00,
+);
 
 $materialize-red: (
   "base":       #e51c23,
@@ -346,7 +378,7 @@ $colors: (
   "blue": $blue,
   "light-blue": $light-blue,
   "cyan": $cyan,
-  "teal": $teal,
+  "teal": $primary,
   "green": $green,
   "light-green": $light-green,
   "lime": $lime,
@@ -358,7 +390,11 @@ $colors: (
   "blue-grey": $blue-grey,
   "grey": $grey,
   "shades": $shades,
-  "primary": $primary
+  "primary": $primary,
+  "secondary": $secondary,
+  "secondary-dark": $secondary-dark,
+  "secondary-light": $secondary-light,
+  "accent": $accent
 ) !default;
 
 

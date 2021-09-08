@@ -260,8 +260,8 @@ div.enable-living .tab-martor-menu a.item {
 
 
 .admonition {
-    box-shadow: 3px 5px #3df799;
-    border: 1px solid #3df799;
+    box-shadow: 3px 5px #fe4e00;
+    border: 1px solid #fe4e00;
     padding: 1em;
     position: relative;
 }
@@ -269,11 +269,12 @@ div.enable-living .tab-martor-menu a.item {
 .admonition-title {
     transform: translateY(-90%);
     width: 500px;
-    border: 1px solid #3df799;
-    background: #3df799;
+    border: 1px solid #fe4e00;
+    background: #fe4e00;
     padding: 0 0 0 45px;
     position: absolute;
     top: 0px;
+    font-size: 19px;
 }
     /*margin: 0 0 0 45px!important;
 
