@@ -1,0 +1,88 @@
+{% load static %}
+<head>
+  {{ form.media }}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="{% static '/css/materialize.css' %}" rel="stylesheet">
+  <link href="/static/martor/css/martor.semantic.css" type="text/css" media="all" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+<style>
+strong{
+ font-weight:bold;
+}
+   body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+</style>
+</head>
+<header>
+</header>
+
+<main style="background: #fdfdfd;">
+    <div class="card-panel secondary" style="height: 80px; padding:0;">
+        <nav>
+          <div class="nav-wrapper primary" style="margin-top: 5vh;">
+            <a href="#!" class="brand-logo center">Logo</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#"><span style="font-weight:bold">ME!</span></a></li>
+            </ul>
+          </div>
+        </nav>
+    </div>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="sass.html">ME!</a></li>
+  </ul>
+
+
+
+
+  {% block content %}
+  {% endblock %}
+
+</main>
+ <footer class="page-footer secondary">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">Footer Content</h5>
+          <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+        </div>
+        <div class="col l4 offset-l2 s12">
+            <a href="#!"><h5 class="white-text">CREDITS</h5></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      © 2014 Copyright Text
+      <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+      </div>
+    </div>
+</footer>
+
+<script src={% static '/martor/js/martor.semantic.js' %}></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src={% static 'js/jquery.formset.js' %}></script>
+<script src="/static/js/materialize.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#myForm tbody tr').formset({
+            prefix: '{{ attachment_form.prefix }}'
+        });
+    })
+$(document).ready(function(){
+    $('.sidenav').sidenav();
+  });
+</script>

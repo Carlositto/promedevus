@@ -1,7 +1,7 @@
 from django.apps import apps
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, FormView
+from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView
 from django.views.generic.detail import SingleObjectMixin
 from .forms import PostForm, AttachmentFormset
 
@@ -59,3 +59,13 @@ class PostAttachmentCreate(CreateView):#, SingleObjectMixin):
 
     def get_success_url(self):
         return reverse_lazy('home-page')
+
+
+class PostsList(ListView):
+    template_name = "devblog/posts_list.html"
+    model = apps.get_model('devblog.Post')
+
+
+class PostDetail(DetailView):
+    template_name = "devblog/post_detail.html"
+    model = apps.get_model('devblog.Post')

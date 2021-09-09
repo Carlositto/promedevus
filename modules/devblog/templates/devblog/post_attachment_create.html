@@ -1,42 +1,5 @@
-{% load static %}
-<head>
-  {{ form.media }}
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link href="{% static '/css/materialize.css' %}" rel="stylesheet">
-  <link href="/static/martor/css/martor.semantic.css" type="text/css" media="all" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-
-<style>
-strong{
- font-weight:bold;
-}
-</style>
-</head>
-
-
-<body style="background: #f5f5f5;">
-
-
-    <div class="card-panel secondary" style="height: 80px; padding:0;">
-        <nav>
-          <div class="nav-wrapper primary" style="margin-top: 5vh;">
-            <a href="#!" class="brand-logo center">Logo</a>
-            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="#"><span style="font-weight:bold">ME!</span></a></li>
-            </ul>
-          </div>
-        </nav>
-    </div>
-
-  <ul class="sidenav" id="mobile-demo">
-    <li><a href="sass.html">ME!</a></li>
-  </ul>
-
-
+{% extends 'devblog/base.html' %}
+{% block content %}
 
 
 
@@ -71,20 +34,6 @@ strong{
       </p>
     </form>
   </div>
-</body>
 
+{% endblock %}
 
-<script src={% static '/martor/js/martor.semantic.js' %}></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src={% static 'js/jquery.formset.js' %}></script>
-<script src="/static/js/materialize.js"></script>
-<script type="text/javascript">
-    $(function() {
-        $('#myForm tbody tr').formset({
-            prefix: '{{ attachment_form.prefix }}'
-        });
-    })
-$(document).ready(function(){
-    $('.sidenav').sidenav();
-  });
-</script>
