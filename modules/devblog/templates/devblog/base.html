@@ -17,6 +17,7 @@ strong{
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    height: 100%;
   }
 
   main {
@@ -84,5 +85,15 @@ strong{
     })
 $(document).ready(function(){
     $('.sidenav').sidenav();
+  });
+$(document).ready(function(){
+  $('.scrollspy').scrollSpy({
+    // specify options here
+  });
+});
+$(document).ready(function(){
+    $('.pushpin').pushpin({
+        top: 120
+    });
   });
 </script>

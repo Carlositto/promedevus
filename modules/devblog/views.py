@@ -1,3 +1,4 @@
+import markdown
 from django.apps import apps
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -69,3 +70,12 @@ class PostsList(ListView):
 class PostDetail(DetailView):
     template_name = "devblog/post_detail.html"
     model = apps.get_model('devblog.Post')
+
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        md = markdown.Markdown(extensions=['toc'])
+        converted_body = md.convert(self.object.body)
+        #context['post_body'] = converted_body
+        context['toc'] = md.toc
+        return context
