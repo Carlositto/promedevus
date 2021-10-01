@@ -1,43 +1,196 @@
 {% extends 'devblog/base.html' %}
 {% load martortags %}
-
-
-
-
 {% block content %}
+<style>
+.btn-flat:focus {
+    background-color: #fdfdfd;
+}
+.liked {
+    color: #ffd23f;
+}
+.comment-avatar {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    left: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+</style>
 
-<div class="container">
-<div class="row">
-    <div class="col s12 m9 l10">
-      <div id="introduction" class="section scrollspy">
-        <p>Content </p>
-      </div>
 
-      <div id="structure" class="section scrollspy">
-        <p>Content </p>
-      </div>
 
-      <div id="initialization" class="section scrollspy">
-        <p>Content </p>
-      </div>
+
+
+        <div class='progress-container'>
+            <div class='progress-bar' id='myBar' style="float: left; width:20%;"></div>
+        <div id="hidden_toast" style="float: left; position:relative;">
+            <a id="scale-demo" href="#!" class="btn-floating btn-large scale-transition pulse scale-out" style="position: absolute; bottom: 100px;">
+                <i class="material-icons">stars</i>
+            </a>
+        </div>
     </div>
-    <div class="col hide-on-small-only m3 l2">
-      <ul class="pushpin section table-of-contents">
-        <li><a href="#introduction">Introduction</a></li>
-        <li><a href="#structure">Structure</a></li>
-        <li><a href="#initialization">Initialization</a></li>
-      </ul>
-    </div>
-  </div>
+        <div class="col hide-on-small-only m3 l2">
+            <a href="{% url 'post-update' object.id %}">Edycja</a>
+        </div>
+        <div class="col s12 m9 l8">
+            <div class="main_body">
+                <div class="flow-text">
+                    <div class="post-secondary-info">
+                        {{ object.date_created }} | {{ object.subtitle }}
+                    </div>
+                    <div class="post-title">
+                        {{ object.title }}
+                    </div>
+                    <div class="post-body">
+                        {{ object.body|safe_markdown }}
+                        <ul>
+                        {% for attachment in attachments %}
+                        <li>{{ attachment }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                     {% csrf_token %}
+                     <button type="submit" id="post_like" class="btn-flat waves-circle" style="font-size: 30px;">
+                         <i id="like_icon" class="material-icons {% if liked %}liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
+                     </button>
+                </div>
+            </div>
+            <div class="comments">
+                <h5>Comments</h5>
+
+                 <ul class="collapsible expandable z-depth-0">
+                    <li class="active">
+                      <div class="collapsible-header" style="padding: 0; height:60px;">
+                        <ul class="collection">
+                           <li class="collection-item avatar">
+                             <img src="https://www.jquery-az.com/html/images/banana.jpg" alt="" class="circle">
+                             <span class="title">Username</span>
+                             <p>Username
+                             </p>
+                           </li>
+                        </ul>
+                      </div>
+                      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span><div class="comment-icons"><i class="material-icons">favorite</i></div></div>
+                    </li>
+                    <li>
+                      <div class="collapsible-header"><i class="material-icons">forum</i>Replies<span class="new badge secondary" data-badge-caption="" style="font-weight:600;">4</span>
+                      </div>
+                      <div class="collapsible-body">
+                        <ul class="collapsible expandable z-depth-0">
+                            <li>
+                                <div class="collapsible-header" style="padding: 0; height:60px;">
+                                  <ul class="collection">
+                                     <li class="collection-item avatar">
+                                       <img src="https://www.jquery-az.com/html/images/banana.jpg" alt="" class="circle">
+                                       <span class="title">Username</span>
+                                       <p>Username
+                                       </p>
+                                     </li>
+                                  </ul>
+                                </div>
+                                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                           </li>
+                        </ul>
+                      </div>
+                    </li>
+                 </ul>
+                 <ul class="collapsible expandable z-depth-0">
+                    <li class="active">
+                      <div class="collapsible-header" style="padding: 0; height:60px;">
+                        <ul class="collection">
+                           <li class="collection-item avatar">
+                             <img src="https://www.jquery-az.com/html/images/banana.jpg" alt="" class="circle">
+                             <span class="title">Username</span>
+                             <p>Username
+                             </p>
+                           </li>
+                        </ul>
+                      </div>
+                      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span><div class="comment-icons"><i class="material-icons">favorite</i></div></div>
+                    </li>
+                 </ul>
 
 
 
-
-{{ object.body|safe_markdown }}
-<hr>
-{{ toc|safe }}
-{% for i in 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' %}
-iadfadsf<br>
-{% endfor %}
+            </div>
+        </div>
+        {% comment %}
+        ############ TOC #################################################################
+        {% endcomment %}
+        <div class="col hide-on-small-only m3 l2">
+          <ul class="pushpin section table-of-contents">
+            {% for main_header in toc_tokens %}
+                <li><a href="#{{ main_header.id }}">{{ main_header.name }}</a></li>
+                    {% if main_header.children %}
+                        <ul>
+                            {% for child in main_header.children %}
+                                <li style="padding-left:20px;"><a href="#{{ child.id }}">{{ child.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+            {% endfor %}
+    
+          </ul>
+        </div>
+        {% comment %}
+        #################################################################################
+        {% endcomment %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock %}
-  </div>
+
+{% block content_script %}
+$('#post_like').click(function(e) {
+    e.preventDefault()
+    $.ajax({
+    url: '{% url "post-like"  object.id  %}',
+        type: "POST",
+        dataType: 'json',
+        data: {
+            post_id: {{ object.id }},
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function (data) {
+            if (data.liked) {
+                $( "#like_icon" ).replaceWith( '<i id="like_icon" class="material-icons liked" style="font-size: 30px;">favorite</i>' );
+            }
+            else {
+                $( "#like_icon" ).replaceWith( '<i id="like_icon" class="material-icons" style="font-size: 30px;">favorite_border</i>' );
+            };
+        },
+        error: function(data){
+            console.log(data);
+            console.log('rrorfsdfs');
+        }
+
+    });
+});
+
+var randomNumber = Math.floor(Math.random() * 11);
+window.onscroll = function() {
+    myFunction(randomNumber)
+};
+function myFunction(randomNumber){
+    var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var scrolled = (winScroll / height) * 100;
+    var flooredScrolled = Math.floor((winScroll / height) * 100);
+    document.getElementById("myBar").style.height = scrolled + "%";
+    document.getElementById("hidden_toast").style.height = scrolled + "%";
+    if (flooredScrolled <= 100-randomNumber && flooredScrolled >= 70+randomNumber) {
+        document.getElementById("scale-demo").classList.add("scale-in");
+    }
+    else {
+        document.getElementById("myBar").style.background = '#ffd23f';
+        document.getElementById("scale-demo").classList.remove("scale-in");
+    };
+}
+$(document).ready(function(){
+    $('.collapsible').collapsible({
+      accordion: false
+    });
+});
+
+
+{% endblock %}

@@ -40,9 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'devblog',
+    'blog_users',
     'django_select2',
     'django_sass',
-    'martor', #markdown
+    'martor_markdown_plus', #markdown
 ]
 
 MIDDLEWARE = [
@@ -127,10 +128,11 @@ USE_TZ = True
 STATICS_PATH_PREFIX = "/home/carlos/DEV/promedevusdep/modules/devblog/"
 STATIC_ROOT = '%s/static/' % STATICS_PATH_PREFIX
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, './static/')
-]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, './media/')
+MEDIA_URL = '/media/'
 
-
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/posts/list'
+LOGOUT_REDIRECT_URL = '/posts/list'
+#SELECT2_CSS = 'custom/css/select2.css'

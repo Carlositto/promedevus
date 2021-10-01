@@ -91,7 +91,7 @@
                         // and hide it, then let Django handle the deleting:
                         del.val('on');
                         row.hide();
-                        forms = $('.' + options.formCssClass).not(':hidden');
+                        forms =$('.' + options.formCssClass);// $('.' + options.formCssClass).not(':hidden');
                         totalForms.val(forms.length);
                     } else {
                         row.remove();
@@ -245,6 +245,6 @@
         keepFieldValues: '',             // jQuery selector for fields whose values should be kept when the form is cloned
         added: null,                     // Function called each time a new form is added
         removed: null,                   // Function called each time a form is deleted
-        hideLastAddForm: false           // When set to true, hide last empty add form (becomes visible when clicking on add button)
+        hideLastAddForm: true           // When set to true, hide last empty add form (becomes visible when clicking on add button)
     };
 })(jQuery);

@@ -94,7 +94,7 @@ div.martor-preview h2,
 div.martor-preview h3,
 div.martor-preview h4,
 div.martor-preview h5,
-div.martor-preview h6{margin:20px 0 10px;padding:0;font-weight:bold !important;-webkit-font-smoothing:antialiased;cursor:text;position:relative;background:none;}
+div.martor-preview h6{margin:20px 0 10px;padding:0;font-weight:normal !important;-webkit-font-smoothing:antialiased;cursor:text;position:relative;background:none;}
 
 div.martor-preview h1:hover a.anchor,
 div.martor-preview h2:hover a.anchor,
@@ -170,7 +170,7 @@ div.martor-preview ul ol,
 div.martor-preview ol ol,
 div.martor-preview ol ul{margin-bottom:0}
 div.martor-preview dl{padding:0}
-div.martor-preview dl dt{font-size:14px;font-weight:bold;font-style:italic;padding:0;margin:15px 0 5px}
+div.martor-preview dl dt{font-size:14px;font-weight:normal;font-style:italic;padding:0;margin:15px 0 5px}
 div.martor-preview dl dt:first-child{padding:0}
 div.martor-preview dl dt>:first-child{margin-top:0px}
 div.martor-preview dl dt>:last-child{margin-bottom:0px}
@@ -180,7 +180,7 @@ div.martor-preview dl dd>:last-child{margin-bottom:0px}
 div.martor-preview blockquote{border-left:4px solid #DDD;padding:5px 15px;color:#777;background-color: #fff}
 div.martor-preview blockquote>:first-child{margin-top:0px}
 div.martor-preview blockquote>:last-child{margin-bottom:0px}
-div.martor-preview table th{font-weight:bold}
+div.martor-preview table th{font-weight:normal}
 div.martor-preview table th,
 div.martor-preview table td{border:1px solid #ccc;padding:6px 13px}
 div.martor-preview table tr{border-top:1px solid #ccc;background-color:#fff}
@@ -260,20 +260,12 @@ div.enable-living .tab-martor-menu a.item {
 
 
 .admonition {
-    box-shadow: 3px 5px #fe4e00;
-    border: 1px solid #fe4e00;
-    padding: 1em;
-    position: relative;
+    border-left: 8px solid #fdd040;
+    padding: 0px 0px 20px 10px;
 }
 
 .admonition-title {
-    transform: translateY(-90%);
-    width: 500px;
-    border: 1px solid #fe4e00;
-    background: #fe4e00;
-    padding: 0 0 0 45px;
-    position: absolute;
-    top: 0px;
+    padding: 10 0 0 5px;
     font-size: 19px;
 }
     /*margin: 0 0 0 45px!important;

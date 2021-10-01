@@ -1,10 +1,5 @@
 <form action="" method="post">
-  {% csrf_token %}
-  {% for field in form %}
-    {{ field.errors }}
-    <hr>
-    {{ field.label_tag }} {{field}}
-  {% endfor %}
+  {{ form.as_ul }}
   <p>
   <button type="submit">Add post</button>
 </form>

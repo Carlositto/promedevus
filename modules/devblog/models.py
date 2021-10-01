@@ -1,8 +1,12 @@
 import datetime
-from django.db import models
-from martor.models import MartorField
-from froala_editor.fields import FroalaField
 
+from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+
+from martor_markdown_plus.models import MartorField
+
+TARGET_MODELS = ['post', 'comment']
 
 class Post(models.Model):
     title = models.CharField(max_length=64, verbose_name='Title')
@@ -50,3 +54,33 @@ class PostCategory(models.Model):
 class PostAttachment(models.Model):
     attachment = models.FileField()
     post = models.ForeignKey('Post', verbose_name='Post', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '%s' % self.attachment
+
+
+class Like(models.Model):
+    post = models.ForeignKey('Post', verbose_name='Post', on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    target_type = models.ForeignKey(ContentType, limit_choices_to={'model__in': TARGET_MODELS}, on_delete=models.PROTECT)
+    target_id = models.PositiveIntegerField()
+    target_object = GenericForeignKey('target_type', 'target_id')
+
+
+class GenericComment(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    comment_body = models.TextField(verbose_name='Comment body')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Comment(GenericComment):
+    post = models.ForeignKey('Post', verbose_name='Post', on_delete=models.CASCADE, related_name='comments')
+
+
+class Reply(GenericComment):
+    comment = models.ForeignKey('Comment', verbose_name='Comment', on_delete=models.CASCADE, related_name='replies')
+

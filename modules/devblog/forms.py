@@ -15,13 +15,9 @@ class PostForm(ModelForm):
         model = Post
         fields = '__all__'
         widgets = {
-            "authors": AuthorWidget(attrs={'style': 'width:1000px'}),
+            "authors": AuthorWidget(attrs={'style': 'width:800px'}),
 
         }
-    #authors = forms.ModelMultipleChoiceField(
-    #    queryset=Author.objects.all(),
-    #    widget=ModelSelect2MultipleWidget
-    #)
 
 
 
