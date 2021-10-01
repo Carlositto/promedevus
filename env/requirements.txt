@@ -14,7 +14,7 @@ ipython-genutils==0.2.0
 jedi==0.18.0
 libsass==0.21.0
 Markdown==3.3.4
-martor==1.6.4
+martor-markdown-plus==0.1.0
 matplotlib-inline==0.1.2
 parso==0.8.2
 pexpect==4.8.0
