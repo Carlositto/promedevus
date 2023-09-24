@@ -1,0 +1,56 @@
+{% extends 'devblog/base.html' %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div class="row">
+            <div class="col l3 center">
+                <h2 class="heading">Current profile picture</h2>
+                <div style="display:flex; justify-content: center;">
+
+                    <img id="output" src={% if object.profile_image %}{{ object.profile_image.url }}{% endif %} class="circle" style="object-fit: contain;height: 170px; width: 170px;">
+
+                </div>
+                    <div class="file-field input-field">
+                      <div class="btn-small">
+                        <span>Change</span>
+                        <input name="profile_image" type="file" onchange="loadFile(event)" accept="image/*"/>
+                      </div>
+                      <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                      </div>
+                    </div>
+            </div>
+            <div class="col l9">
+                    {% if form.errors %}
+                        <blockquote class="red lighten-5">  
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                            {{ error}}
+                            {% endfor %}
+                            {% endfor %}
+                        </blockquote>
+                    {% endif %}
+                    <p><label for="id_first_name">First name:</label> <input value="{{ object.first_name }}" type="text" name="first_name" maxlength="32" id="id_first_name"></p>
+                    <p><label for="id_last_name">Last name:</label> <input value="{{ object.last_name }}" type="text" name="last_name" maxlength="64" id="id_last_name"></p>
+                    <p><label for="id_email">E-mail:</label> <input value="{{ object.email }}" type="email" name="email" maxlength="254" id="id_email"></p>
+                    <p><label for="id_description">Description:</label><div class="input-field">
+                        <textarea value="" class="materialize-textarea" type="text" name="description" maxlength="264" id="id_description">{{ object.description }}</textarea></p>
+                    <button class="btn primary" type="submit">Save</button>
+                    <a class="btn secondary" href="{% url 'blog-user-detail' object.id %}">Cancel</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
+{% block content_script %}
+<script>
+  var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src) // free memory
+    }
+  };
+</script>
+{% endblock %}

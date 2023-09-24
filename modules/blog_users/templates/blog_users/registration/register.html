@@ -3,9 +3,37 @@
 {% block content %}
   <div class="container">
 <form method="POST">
+    {% if form.errors %}
+        <blockquote class="red lighten-5">  
+            {% for field in form %}
+                {% for error in field.errors %}
+            {{ error}}
+            {% endfor %}
+            {% endfor %}
+        </blockquote>
+    {% endif %}
     {% csrf_token %}
-    {{ form.as_p }}
-  <button class='btn primary' type="submit">Register</button>
+    <p>
+        <label for="id_username">Username:</label>
+        <input type="text" name="username" maxlength="150" autocapitalize="none" autocomplete="username" autofocus required id="id_username">
+        <span class="helptext">Letters, digits and @/./+/-/_ only.</span>
+    </p>
+    <p>
+        <label for="id_password1">Password:</label>
+        <input type="password" name="password1" autocomplete="new-password" required id="id_password1">
+        <span class="helptext">
+            <ul class="helptext">
+                <li>Your password must contain at least 8 characters.</li>
+                <li>Your password can’t be entirely numeric.</li>
+            </ul>
+        </span>
+    </p>
+    <p>
+        <label for="id_password2">Password confirmation:</label>
+        <input type="password" name="password2" autocomplete="new-password" required id="id_password2">
+        <span class="helptext">Enter the same password as before, for verification.</span>
+    </p>
+    <button class='btn primary' type="submit">Register</button>
 </form>
   </div>
 {% endblock content %}

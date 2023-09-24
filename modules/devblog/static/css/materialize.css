@@ -4584,19 +4584,19 @@ html {
 
 @media only screen and (min-width: 0) {
   html {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 
 @media only screen and (min-width: 993px) {
   html {
-    font-size: 14.5px;
+    font-size: 16px;
   }
 }
 
 @media only screen and (min-width: 1201px) {
   html {
-    font-size: 15px;
+    font-size: 16px;
   }
 }
 
@@ -4610,19 +4610,18 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 
 h1 {
-  font-size: 4.2rem;
+  font-size: 2.4rem;
   line-height: 110%;
   margin: 2.8rem 0 1.68rem 0;
 }
 
 h2 {
-  font-size: 3.56rem;
+  font-size: 1.86rem;
   line-height: 110%;
-  margin: 2.37333333rem 0 1.424rem 0;
 }
 
 h3 {
-  font-size: 2.92rem;
+  font-size: 1.20rem;
   line-height: 110%;
   margin: 1.94666667rem 0 1.168rem 0;
 }

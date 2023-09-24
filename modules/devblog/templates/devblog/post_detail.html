@@ -1,13 +1,59 @@
 {% extends 'devblog/base.html' %}
 {% load martortags %}
+{% load comments static %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'fluent_comments/css/ajaxcomments.css' %}" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <style>
+.container {
+     word-wrap: break-word;
+    }
+.post-toolbar {
+    display: flex;
+    flex-direction: row;
+    height: 80;
+    width: 170px;
+    gap: 30px;
+    padding-left: 0px;
+    padding-top: 0px;
+    margin-top:0;
+}
+.post-toolbar i {
+    font-size: 30px;
+}
+
+.post-toolbar button {
+    padding: 0;
+}
+
+.post-toolbar-large {
+    display: flex;
+    flex-direction: row;
+    height: 80;
+    width: inherit;
+    padding-top: 0px;
+    padding: 0;
+    margin-top:1rem;
+}
+
+.post-toolbar-large i {
+    font-size: 30px;
+}
+
+.post-toolbar-large button {
+    padding: 0;
+}
+
+.asteriskField {
+    display: none;
+}
 .btn-flat:focus {
     background-color: #fdfdfd;
 }
 .liked {
     color: #ffd23f;
 }
+
 .comment-avatar {
     position: absolute;
     width: 42px;
@@ -17,6 +63,85 @@
     display: inline-block;
     vertical-align: middle;
 }
+.comment-container {
+    margin: 0 0 0 0;
+}
+.comment-header {
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    display: flex;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.5;
+    padding: 10;
+    height: 60px;
+    background-color: #fdfdfd;
+}
+
+.main {
+    border-left: 3px solid #ffd23f!important;
+}
+
+.reply {
+    transform: scale(0.93);
+    transform-origin: right;
+}
+
+.comments-section {
+    margin-top: 3rem;
+}
+
+.comment-username {
+    padding-left: 55px;
+}
+
+.comment-username span {
+    font-size: 16px;
+}
+
+.comment-username p {
+    margin: 0;
+}
+.comment-body {
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    padding: 1rem;
+    background-color: #fff;
+}
+.comment-body p {
+    margin: 0;
+}
+
+.comment-footer {
+    font-size: 12px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.5;
+    background-color: #fff;
+}
+.comment-footer span {
+    padding-left: 5px;
+}
+
+.comment-footer i {
+    font-size: 18px;
+}
+
+
+.comment-footer button i {
+    font-size: 18px;
+}
+
+.comment-footer a {
+    color: #000000de;
+}
+.comment-footer a:hover {
+    color: #ffd23f;
+}
+
 </style>
 
 
@@ -26,22 +151,27 @@
         <div class='progress-container'>
             <div class='progress-bar' id='myBar' style="float: left; width:20%;"></div>
         <div id="hidden_toast" style="float: left; position:relative;">
-            <a id="scale-demo" href="#!" class="btn-floating btn-large scale-transition pulse scale-out" style="position: absolute; bottom: 100px;">
+            <a id="scale-demo" href="#!" class="btn-floating scale-transition pulse scale-out" style="position: absolute; bottom: 100px; left: 5px;">
                 <i class="material-icons">stars</i>
             </a>
         </div>
     </div>
-        <div class="col hide-on-small-only m3 l2">
-            <a href="{% url 'post-update' object.id %}">Edycja</a>
+        <div class="col hide-on-small-only m3 l1">
+            {% if user.author %}
+                <a href="{% url 'post-update' object.id %}">Edycja</a>
+            {% endif %}
+        </div>
+        <div class="col hide-on-small-only m3 l1">
         </div>
         <div class="col s12 m9 l8">
-            <div class="main_body">
-                <div class="flow-text">
+            <div class="main-body">
                     <div class="post-secondary-info">
                         {{ object.date_created }} | {{ object.subtitle }}
                     </div>
                     <div class="post-title">
-                        {{ object.title }}
+                        <span class="scrollspy" id="posttitle">{{ object.title }}</span>
+                    </div>
+                    <div class="divider">
                     </div>
                     <div class="post-body">
                         {{ object.body|safe_markdown }}
@@ -51,68 +181,50 @@
                         {% endfor %}
                         </ul>
                     </div>
-                     {% csrf_token %}
-                     <button type="submit" id="post_like" class="btn-flat waves-circle" style="font-size: 30px;">
-                         <i id="like_icon" class="material-icons {% if liked %}liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
-                     </button>
-                </div>
+                    <div class="divider">
+                    </div>
+
             </div>
-            <div class="comments">
-                <h5>Comments</h5>
+        <div class="hide-on-med-and-up">
+            <div class="post-toolbar-large card-panel z-depth-0">
+                 {% csrf_token %}
+                 <button type="submit" id="post_like" class="btn-flat post_like">
+                     <i id="like_icon" class="material-icons like_icon{% if liked %} liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
+                 </button>
+            </div>
+        </div>
+            <div class="comments-section scrollspy" id="discussion">
 
-                 <ul class="collapsible expandable z-depth-0">
-                    <li class="active">
-                      <div class="collapsible-header" style="padding: 0; height:60px;">
-                        <ul class="collection">
-                           <li class="collection-item avatar">
-                             <img src="https://www.jquery-az.com/html/images/banana.jpg" alt="" class="circle">
-                             <span class="title">Username</span>
-                             <p>Username
-                             </p>
-                           </li>
-                        </ul>
-                      </div>
-                      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span><div class="comment-icons"><i class="material-icons">favorite</i></div></div>
-                    </li>
-                    <li>
-                      <div class="collapsible-header"><i class="material-icons">forum</i>Replies<span class="new badge secondary" data-badge-caption="" style="font-weight:600;">4</span>
-                      </div>
-                      <div class="collapsible-body">
-                        <ul class="collapsible expandable z-depth-0">
-                            <li>
-                                <div class="collapsible-header" style="padding: 0; height:60px;">
-                                  <ul class="collection">
-                                     <li class="collection-item avatar">
-                                       <img src="https://www.jquery-az.com/html/images/banana.jpg" alt="" class="circle">
-                                       <span class="title">Username</span>
-                                       <p>Username
-                                       </p>
-                                     </li>
-                                  </ul>
+                {% if user.is_authenticated %}
+                    <h6>Drop a comment below!</h6>
+                    {% render_comment_form for object %}
+                {% else %}
+                <h6><a class="btn-small primary" id="log_in_discussion" href="#l">Log in</a> to participate in a discussion</h6>
+                {% endif %}
+
+                {% if object.has_comments %}
+                    <div class="row">
+                        <div class="col s6">
+                            <h5>Discussion <i class="material-icons">forum</i></h5>
+                        </div>
+                        <div class="col s6">
+                            <div class="comments_sorting">
+                                <div class="input-field col m4 s8 offset-s4 offset-m8">
+                                  <select id="sort_select">
+                                   <option id="oldest" value="submit_date">Oldest</option>
+                                   <option id="newest" value="-submit_date">Newest</option>
+                                  </select>
+                                  <label>Sort by</label>
                                 </div>
-                                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-                           </li>
-                        </ul>
-                      </div>
-                    </li>
-                 </ul>
-                 <ul class="collapsible expandable z-depth-0">
-                    <li class="active">
-                      <div class="collapsible-header" style="padding: 0; height:60px;">
-                        <ul class="collection">
-                           <li class="collection-item avatar">
-                             <img src="https://www.jquery-az.com/html/images/banana.jpg" alt="" class="circle">
-                             <span class="title">Username</span>
-                             <p>Username
-                             </p>
-                           </li>
-                        </ul>
-                      </div>
-                      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span><div class="comment-icons"><i class="material-icons">favorite</i></div></div>
-                    </li>
-                 </ul>
-
-
+                            </div>
+                        </div>
+                    </div>
+                    <div class="loaded_comments" style="margin-top: -130px;">
+                        {% include  'devblog/load_comments.html' %}
+                    </div>
+                {% else %}
+                It's so empty here..
+                {% endif %}
 
             </div>
         </div>
@@ -120,28 +232,38 @@
         ############ TOC #################################################################
         {% endcomment %}
         <div class="col hide-on-small-only m3 l2">
-          <ul class="pushpin section table-of-contents">
-            {% for main_header in toc_tokens %}
-                <li><a href="#{{ main_header.id }}">{{ main_header.name }}</a></li>
-                    {% if main_header.children %}
-                        <ul>
-                            {% for child in main_header.children %}
-                                <li style="padding-left:20px;"><a href="#{{ child.id }}">{{ child.name }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-            {% endfor %}
+            <div class="pushpin">
+                <ul class="table-of-contents">
+                    <li><a style="font-weight: 600;" href="#posttitle">{{ object.title }}</a></li>
+                  {% for main_header in toc_tokens %}
+                      <li><a class="secondary-text" href="#{{ main_header.id }}">{{ main_header.name }}</a></li>
+                          {% if main_header.children %}
+                              <ul>
+                                  {% for child in main_header.children %}
+                                      <li style="padding-left:20px;"><a class="secondary-text" href="#{{ child.id }}">{{ child.name }}</a></li>
+                                  {% endfor %}
+                              </ul>
+                          {% endif %}
+                  {% endfor %}
+                  <li><a style="font-weight: 600;" class="primary-text" href="#discussion">Discussion  <i style="font-size: 16px"class="material-icons">forum</i></a></li>
     
-          </ul>
+                </ul>
+                <div class="post-toolbar card-panel z-depth-0">
+                     {% csrf_token %}
+                     <button type="submit" id="post_like" class="btn-flat post_like">
+                         <i id="like_icon" class="material-icons like_icon {% if liked %} liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
+                     </button>
+                </div>
+            </div>
         </div>
         {% comment %}
         #################################################################################
         {% endcomment %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock %}
 
 {% block content_script %}
-$('#post_like').click(function(e) {
+<script>
+$('.post_like').click(function(e) {
     e.preventDefault()
     $.ajax({
     url: '{% url "post-like"  object.id  %}',
@@ -153,10 +275,10 @@ $('#post_like').click(function(e) {
         },
         success: function (data) {
             if (data.liked) {
-                $( "#like_icon" ).replaceWith( '<i id="like_icon" class="material-icons liked" style="font-size: 30px;">favorite</i>' );
+                $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon liked" style="font-size: 30px;">favorite</i>' );
             }
             else {
-                $( "#like_icon" ).replaceWith( '<i id="like_icon" class="material-icons" style="font-size: 30px;">favorite_border</i>' );
+                $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon" style="font-size: 30px;">favorite_border</i>' );
             };
         },
         error: function(data){
@@ -166,6 +288,35 @@ $('#post_like').click(function(e) {
 
     });
 });
+  $('h1').addClass('section scrollspy'); // This enables table of content's responsiveness
+  $('h2').addClass('section scrollspy'); // and weights the font to bold in it
+  $('h3').addClass('section scrollspy'); // and weights the font to bold in it
+
+//Trochę chaos przez to jak zachowuje się Python Markdown + Scrollspy
+//Pierwsza instrukcja wstawia div po każdym h1, h2 i h3 z odpowiednim id
+//Dodaje też custom attr do każdego p po headerach
+//
+//Druga instrukcja dokłada nasze p w nowe divy
+//Usuwa też id z h1, h2 i h3 żeby nasze table of content z ScrollSpy lepiej się zachował
+//
+//Po wszystkim odpalamy Scrollspy
+  $(':header').each(function() {
+    var idEle = $(this).attr('id');
+    var divEle = $('<div class="scrollspy"></div>').attr('id', idEle).insertAfter( $(this) );
+    $(this).nextUntil(':header', 'p, div' ).attr('child-of', idEle);
+  });
+
+  $('div.scrollspy').each(function() {
+    $('p[child-of=' + $(this).attr('id') + '], div[child-of=' + $(this).attr('id') + ']').appendTo($(this));
+      if (($(this).parent(':header')) && ($(this).has('p').length)) {
+        $(':header' + '#' + $(this).attr('id')).removeAttr('id');
+      }
+      else {
+        $(this).removeAttr('id');
+      }
+  });
+
+
 
 var randomNumber = Math.floor(Math.random() * 11);
 window.onscroll = function() {
@@ -173,24 +324,50 @@ window.onscroll = function() {
 };
 function myFunction(randomNumber){
     var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var height = $('.post-body').height();//document.documentElement.scrollHeight - document.documentElement.clientHeight;
     var scrolled = (winScroll / height) * 100;
     var flooredScrolled = Math.floor((winScroll / height) * 100);
     document.getElementById("myBar").style.height = scrolled + "%";
     document.getElementById("hidden_toast").style.height = scrolled + "%";
     if (flooredScrolled <= 100-randomNumber && flooredScrolled >= 70+randomNumber) {
-        document.getElementById("scale-demo").classList.add("scale-in");
+       document.getElementById("scale-demo").classList.add("scale-in");
     }
     else {
-        document.getElementById("myBar").style.background = '#ffd23f';
-        document.getElementById("scale-demo").classList.remove("scale-in");
+       document.getElementById("myBar").style.background = '#ffd23f';
+       document.getElementById("scale-demo").classList.remove("scale-in");
     };
 }
-$(document).ready(function(){
-    $('.collapsible').collapsible({
-      accordion: false
+
+$('textarea').addClass('materialize-textarea');
+
+$('#div_id_comment > div').addClass('input-field');
+
+var label = $('label[for="id_comment"]').detach();
+
+label.insertAfter($('.materialize-textarea'));
+
+
+$('select#sort_select').on('change', function(e) {
+    var sort_by = $(this).val();
+    $.ajax({
+            type: "GET",
+            url: "{% url 'load-comments' %}",
+            data: {'object_pk': {{ object.id }}, 'sort_by': sort_by },
+            success : function(data) {
+                $(".loaded_comments").html(data);
+            }
     });
 });
+  $(document).ready(function(){
+    $('select').formSelect({
+      // specify options here
+    });
+  $('.scrollspy').scrollSpy({
+      'throttle': 100
+      }
+  );
+  });
 
-
+</script>
+<script src="/static/js/materialize.js"></script>
 {% endblock %}

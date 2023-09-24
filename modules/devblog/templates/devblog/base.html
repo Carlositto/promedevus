@@ -8,80 +8,60 @@
   <link href="{% static '/css/materialize.css' %}" rel="stylesheet">
   <link href="{% static '/martor/css/martor.semantic.css' %}" type="text/css" media="all" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-
-<style>
-  .tab-color {
-      color: #ffd23f!important;
-  }
-  strong{
-    font-weight:bold;
-  }
-
-  body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  main {
-    flex: 1 0 auto;
-  }
-
-  .post-title {
-     font-size: 4.4rem;
-     margin: -20 0 0 0 ;
-  }
-  .post-secondary-info {
-      font-size: 1.2rem;
-  }
-  .progress-container {
-      width: 6vw;
-      height:100%;
-      position:fixed;
-      z-index:99;
-      top:0;
-      left:0;
-  }
-  .progress-bar {
-      background:#ffd23f;
-  }
-</style>
+  <link href="{% static '/css/devblog.css' %}" rel="stylesheet">
 </head>
 <header>
 </header>
 
 <main style="background: #fdfdfd;">
-    <div class="card-panel primary" style="height: 70px; padding:0;">
-        <nav>
-          <div class="nav-wrapper secondary" style="margin-top: 5vh;">
-              <a href="{% url 'posts-list' %}" class="brand-logo center">Promedevus</a>
-            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    <div class="card-panel primary" style="height: 70px; padding:0; margin-top: 0px">
+        <nav class="z-depth-0">
+          <div class="nav-wrapper" style="background-color:#fdfdfd;">
+              <a href="{% url 'posts-list' %}" class="brand-logo center" style="color:#403d39;">Promedevus</a>
+            <a href="#" data-target="mobile-demo" style="color:#403d39;" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a href="{% url 'posts-list' %}" span style="font-weight:bold">Articles</span></a></li>
-                <li><a href="#"><span style="font-weight:bold">ME!</span></a></li>
+                <li><a href="{% url 'posts-list' %}" span style="font-weight:bold; color:#403d39">Posts</span></a></li>
+                <li><a href="{% url 'about-page' %}"><span style="font-weight:bold; color:#403d39">About</span></a></li>
                 {% if request.user.is_authenticated %}
-                    <li><a class="dropdown-trigger" href="#!" data-target="user_dropdown"><span style="font-weight:bold">{{ request.user.username }}</span><i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li>
+                        <a class="dropdown-trigger" href="#!" data-target="user_dropdown">
+                            <img src={% if user.bloguser.profile_image %} {{ user.bloguser.profile_image.url }} {% else %} "{% static 'images/default_avatar.jpg' %}" {% endif %}  class="responsive-img circle left" style="object-fit: contain;height: 42px; width: 42px;margin-top: 12px; margin-right: 12px;">
+                            <span style="font-weight:bold; color:#403d39">
+                                {{ request.user.username }}
+                            </span>
+                            <i class="material-icons right"style="; color:#403d39">arrow_drop_down</i>
+                        </a>
+                    </li>
                 {% else %}
-                    <li><a class="dropdown-trigger" id="auth" href="#!" data-target="user_dropdown2"><span style="font-weight:bold">Log in</span><i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a class="dropdown-trigger" id="auth" href="#!" data-target="user_dropdown2"><span style="font-weight:bold; color:#403d39">Log in</span><i style="color:#403d39" class="material-icons right">arrow_drop_down</i></a></li>
                 {% endif %}
             </ul>
           </div>
         </nav>
     </div>
         <!-- Dropdown Structure -->
-    <ul id="user_dropdown" class="dropdown-content">
-      <li><a href="{% url 'logout' %}"><span style="font-weight:bold">Log out</span></a></li>
-    </ul>
+    {% if request.user.is_authenticated %}
+        <ul id="user_dropdown" class="dropdown-content">
+          <li>
+              <a class="secondary-text" href="{% url 'blog-user-detail' user.bloguser.id %}">
+                  <span style="font-weight:bold">Profile</span>
+                  <i class="material-icons right">settings</i>
+              </a>
+          </li>
+          <li>
+              <a class="secondary-text" href="{% url 'logout' %}">
+                  <span style="font-weight:bold">Log out</span>
+                  <i class="material-icons right">exit_to_app</i>
+              </a>
+          </li>
+        </ul>
+    {% endif %}
 
     <ul id="user_dropdown2" class="dropdown-content" style="overflow-y: hidden;"> 
         <div class="container">
-            <form method="POST" id="sign_in_form" action="{% url 'login' %}">
+            <form method="post" id="sign_in_form" action="{% url 'login' %}">
                  {% csrf_token %}
-                 <div class="form-container" style="padding-top: 20px;">
                     {% include 'devblog/login_form.html' %}
-                 </div>
             </form>
         </div>
     </ul>
@@ -95,30 +75,17 @@
 
 
 
-<div class="container">
+  <div class="container">
     <div class="row">
         {% block content %}
         {% endblock %}
-        <script>
           {% block content_script %}
           {% endblock %}
-        </script>
     </div>
-</div>
+  </div>
 
 </main>
  <footer class="page-footer secondary">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <h5 class="white-text">Footer Content</h5>
-          <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
-        </div>
-        <div class="col l4 offset-l2 s12">
-            <a href="#!"><h5 class="white-text">CREDITS</h5></a>
-        </div>
-      </div>
-    </div>
     <div class="footer-copyright">
       <div class="container">
       © 2021 KAROL WIATROWSKI
@@ -131,77 +98,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src={% static 'js/jquery.formset.js' %}></script>
 <script src="/static/js/materialize.js"></script>
-<script type="text/javascript">
-    $(function() { // Allows multiple forms to be added to attachments formset
-        $('#myForm tbody tr').formset({
-            prefix: '{{ attachment_form.prefix }}'
-        });
-    })
-$(document).ready(function(){
-  $('.sidenav').sidenav(); //Sidenav
-  $('.pushpin').pushpin({ //Table of content on the post-detail
-      top: 100,
-      offset: 200
-  });
-  $('img').addClass('responsive-img'); // This enables image's responsiveness
-  $('h1').addClass('section scrollspy'); // This enables table of content's responsiveness
-  $('h2').addClass('section scrollspy'); // and weights the font to bold in it
-  $('.post-body ul').addClass('browser-default'); // Restore bullets on <ul> since Materialize removes it by its default
-  $('.admonition').addClass('z-depth-2'); // Adds Materialize shadow to admonition div
-  $('pre').addClass('z-depth-2'); // Adds Materialize shadow to code blocks
-  $('.scrollspy').scrollSpy({ // enable table of content
-    // specify options here
-  });
-  $('.dropdown-trigger').dropdown({
-      coverTrigger: false
-    // specify options here
-  });
-  var dd = $('#auth').dropdown({
-      constrainWidth: false,
-      coverTrigger: false,
-      closeOnClick: false,
-      autoTrigger: false,
-      alignment: 'left',
-  });
-
-    $('#sign_in_form').submit(function(e){
-        e.preventDefault();
-        var urlLocation = $(location).attr("href");
-        $.ajax({
-            url: '{% url "login" %}',
-            type: "POST",
-            dataType: 'json',
-            data: {
-                username: $('#id_username').val(),
-                password: $('#id_password').val(),
-                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-            },
-            success: function (data) {
-                if (data.valid) {
-                    window.location.href = urlLocation;
-                }
-                else {
-                    var dropdownInstance = M.Dropdown.getInstance(dd);
-                    $('#errors').empty()
-                    var json_str = JSON.stringify(data);
-                    var json_data = JSON.parse(json_str); 
-                    var errors = JSON.parse(json_data.errors); 
-                    $.each(errors, function(index, value) {
-                        $.each(value, function(index, value2) {
-                        $('#errors').append(value2.message);
-                        });
-                    });
-                    $('#errors').show()
-                    dropdownInstance.recalculateDimensions();
-                };
-            },
-            error: function(data){
-                console.log(data);
-                console.log('error');
-            }
-
-        });
-    });
-
-});
-</script>
+<script type="text/javascript" src="{% static 'fluent_comments/js/ajaxcomments.js' %}"></script>
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+{% include 'devblog/devblog_js.html' %}

@@ -15,7 +15,7 @@ from django.contrib.auth import (
 class UserCreateView(CreateView):
     form_class = UserCreationForm
     template_name = 'blog_users/registration/register.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('posts-list')
 
 
 class UserLoginView(auth_views.LoginView):

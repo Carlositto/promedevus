@@ -25,5 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('select2/', include("django_select2.urls")),
     path('martor_markdown_plus/', include('martor_markdown_plus.urls')),
+    path('blog/comments/', include('fluent_comments.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

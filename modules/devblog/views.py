@@ -6,13 +6,18 @@ import uuid
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from django.utils.decorators import method_decorator
+from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView, View
 from django.views.generic.detail import SingleObjectMixin
+from django.views.decorators.cache import never_cache
 from .forms import PostForm, AttachmentFormset
 
 
@@ -32,11 +37,9 @@ class PostCreate(CreateView):
     fields = '__all__'
 
 
-class PostAttachmentCreate(CreateView):#, SingleObjectMixin):
+class PostAttachmentCreate(CreateView):
     template_name = "devblog/post_attachment_create.html"
     model = apps.get_model('devblog.Post')
-    #form_class = PostForm(request.POST)
-    #fields = '__all__'
 
     def get(self, request, *args, **kwargs):
         self.object = None
@@ -51,7 +54,6 @@ class PostAttachmentCreate(CreateView):#, SingleObjectMixin):
 
     def post(self, request, *args, **kwargs):
         self.object = None
-        #form_class = PostForm(self.request.POST)
         form = PostForm(self.request.POST)
         attachment_form = AttachmentFormset(self.request.POST, self.request.FILES)
         if (form.is_valid() and attachment_form.is_valid()):
@@ -93,17 +95,44 @@ class PostDetail(DetailView):
         md = markdown.Markdown(extensions=['toc'])
         converted_body = md.convert(self.object.body)
         if apps.get_model('auth.User').objects.filter(id=self.request.user.id).exists():
-            context['liked'] = apps.get_model('devblog.Like').objects.filter(user=self.request.user, post=self.get_object()).exists()
+            content_type = apps.get_model('contenttypes.ContentType').objects.get(model='post')
+            context['liked'] = apps.get_model('devblog.Like').objects.filter(user=self.request.user, target_type=content_type, target_id=self.get_object().id).exists()
         #context['post_body'] = converted_body
         context['toc'] = md.toc
         context['toc_tokens'] = md.toc_tokens
         context['attachments'] = apps.get_model('devblog.PostAttachment').objects.filter(post=self.object)
         return context
 
-class PostUpdate(UpdateView):
+
+class BlogUserDetail(DetailView):
+    template_name = "devblog/blog_user_detail.html"
+    model = apps.get_model('blog_users.BlogUser')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        content_type = apps.get_model('contenttypes.ContentType').objects.get(model='post')
+        related_posts = apps.get_model('django_comments.Comment').objects.filter(user=self.request.user).order_by().values_list('object_pk', flat=True).distinct()
+        posts_ids = [int(pk) for pk in related_posts]
+        context['posts_participated'] = apps.get_model('devblog.Post').objects.filter(id__in=posts_ids)
+        context['liked_posts'] = apps.get_model('devblog.Like').objects.filter(user=self.object.user, target_type=content_type)
+        return context
+
+
+class BlogUserUpdate(UpdateView):
+    template_name = "devblog/bloguser_form.html"
+    model = apps.get_model('blog_users.BlogUser')
+    fields = ['profile_image', 'first_name', 'last_name', 'email', 'description']
+
+    def get_success_url(self):
+        return reverse_lazy('blog-user-detail', args=[self.kwargs['pk']])
+
+
+class PostUpdate(PermissionRequiredMixin, UpdateView):
     template_name = "devblog/post_update.html"
     model = apps.get_model('devblog.Post')
     form_class = PostForm
+    permission_required = 'devblog.change_post'
+
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -112,8 +141,10 @@ class PostUpdate(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
         #form_class = PostForm(self.request.POST)
-        form = PostForm(self.request.POST, instance=self.get_object())
+        #form = PostForm(self.request.POST, instance=self.get_object())
         attachment_form = AttachmentFormset(self.request.POST, self.request.FILES, instance=self.object)
         if (form.is_valid() and attachment_form.is_valid()):
             return self.form_valid(form, attachment_form)
@@ -143,12 +174,40 @@ class PostLike(View):
     def post(self, request, pk):
         data = {}
         post = apps.get_model('devblog.Post').objects.get(id=self.kwargs['pk'])
-        if not apps.get_model('devblog.Like').objects.filter(post=post).exists():
-            apps.get_model('devblog.Like').objects.create(user=self.request.user, post=post)
+        content_type = apps.get_model('contenttypes.ContentType').objects.get(model='post')
+        if not apps.get_model('devblog.Like').objects.filter(target_type=content_type, target_id=post.id, user=self.request.user).exists():
+            apps.get_model('devblog.Like').objects.create(user=self.request.user, target_type=content_type, target_id=post.id)
             data['liked'] = 1
         else:
-            apps.get_model('devblog.Like').objects.get(user=self.request.user, post=post).delete()
+            apps.get_model('devblog.Like').objects.get(user=self.request.user, target_type=content_type, target_id=post.id).delete()
             data['liked'] = 0
         return JsonResponse(data)
 
 
+class CommentLike(View):
+
+    def post(self, request, pk):
+        data = {}
+        comment = apps.get_model('django_comments.Comment').objects.get(id=self.kwargs['pk'])
+        content_type = apps.get_model('contenttypes.ContentType').objects.get(model='comment', app_label='django_comments')
+        if not apps.get_model('devblog.Like').objects.filter(target_type=content_type, target_id=comment.id, user=self.request.user).exists():
+            apps.get_model('devblog.Like').objects.create(user=self.request.user, target_type=content_type, target_id=comment.id)
+            data['liked'] = 1
+        else:
+            apps.get_model('devblog.Like').objects.get(user=self.request.user, target_type=content_type, target_id=comment.id).delete()
+            data['liked'] = 0
+        return JsonResponse(data)
+
+
+class LoadComments(View):
+
+    def get(self, request):
+        print('dasd')
+        detail_object = apps.get_model('devblog.Post').objects.get(id=self.request.GET['object_pk'])
+        context = {'object': detail_object, 'sort_by': self.request.GET['sort_by']}
+        return render(request, 'devblog/load_comments.html', context=context)
+
+
+
+class AboutTemplate(TemplateView):
+    template_name = "devblog/about.html"
