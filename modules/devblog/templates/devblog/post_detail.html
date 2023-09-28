@@ -4,149 +4,8 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'fluent_comments/css/ajaxcomments.css' %}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<style>
-.container {
-     word-wrap: break-word;
-    }
-.post-toolbar {
-    display: flex;
-    flex-direction: row;
-    height: 80;
-    width: 170px;
-    gap: 30px;
-    padding-left: 0px;
-    padding-top: 0px;
-    margin-top:0;
-}
-.post-toolbar i {
-    font-size: 30px;
-}
-
-.post-toolbar button {
-    padding: 0;
-}
-
-.post-toolbar-large {
-    display: flex;
-    flex-direction: row;
-    height: 80;
-    width: inherit;
-    padding-top: 0px;
-    padding: 0;
-    margin-top:1rem;
-}
-
-.post-toolbar-large i {
-    font-size: 30px;
-}
-
-.post-toolbar-large button {
-    padding: 0;
-}
-
-.asteriskField {
-    display: none;
-}
-.btn-flat:focus {
-    background-color: #fdfdfd;
-}
-.liked {
-    color: #ffd23f;
-}
-
-.comment-avatar {
-    position: absolute;
-    width: 42px;
-    height: 42px;
-    overflow: hidden;
-    left: 15px;
-    display: inline-block;
-    vertical-align: middle;
-}
-.comment-container {
-    margin: 0 0 0 0;
-}
-.comment-header {
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-left: 1px solid #ddd;
-    display: flex;
-    position: relative;
-    -webkit-tap-highlight-color: transparent;
-    line-height: 1.5;
-    padding: 10;
-    height: 60px;
-    background-color: #fdfdfd;
-}
-
-.main {
-    border-left: 3px solid #ffd23f!important;
-}
-
-.reply {
-    transform: scale(0.93);
-    transform-origin: right;
-}
-
-.comments-section {
-    margin-top: 3rem;
-}
-
-.comment-username {
-    padding-left: 55px;
-}
-
-.comment-username span {
-    font-size: 16px;
-}
-
-.comment-username p {
-    margin: 0;
-}
-.comment-body {
-    border: 1px solid #ddd;
-    box-sizing: border-box;
-    padding: 1rem;
-    background-color: #fff;
-}
-.comment-body p {
-    margin: 0;
-}
-
-.comment-footer {
-    font-size: 12px;
-    display: flex;
-    position: relative;
-    align-items: center;
-    -webkit-tap-highlight-color: transparent;
-    line-height: 1.5;
-    background-color: #fff;
-}
-.comment-footer span {
-    padding-left: 5px;
-}
-
-.comment-footer i {
-    font-size: 18px;
-}
-
-
-.comment-footer button i {
-    font-size: 18px;
-}
-
-.comment-footer a {
-    color: #000000de;
-}
-.comment-footer a:hover {
-    color: #ffd23f;
-}
-
-</style>
-
-
-
-
+<script src="/static/js/materialize.js"></script>
+<script type="text/javascript" src="{% static 'fluent_comments/js/ajaxcomments.js' %}"></script>
 
         <div class='progress-container'>
             <div class='progress-bar' id='myBar' style="float: left; width:20%;"></div>
@@ -157,7 +16,7 @@
         </div>
     </div>
         <div class="col hide-on-small-only m3 l1">
-            {% if user.author %}
+            {% if user.author in object.authors.all or user.is_superuser %}
                 <a href="{% url 'post-update' object.id %}">Edycja</a>
             {% endif %}
         </div>
@@ -369,5 +228,4 @@ $('select#sort_select').on('change', function(e) {
   });
 
 </script>
-<script src="/static/js/materialize.js"></script>
 {% endblock %}

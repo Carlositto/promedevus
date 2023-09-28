@@ -121,7 +121,6 @@ div.martor-preview h2{font-size:24px !important;color:#000 !important}
 div.martor-preview h3{font-size:18px !important;}
 div.martor-preview h4{font-size:16px !important;}
 div.martor-preview h5{font-size:14px !important;text-transform:none !important}
-div.martor-preview h6{color:#777;font-size:14px}
 div.martor-preview p,
 div.martor-preview blockquote,
 div.martor-preview ul,
@@ -205,7 +204,7 @@ div.martor-preview tt{margin:0 2px;padding:0px 5px;border:1px solid #eaeaea;back
 div.martor-preview code{white-space:nowrap}
 div.martor-preview pre>code{margin:0;padding:0;white-space:pre;border:none;background:transparent}
 div.martor-preview .highlight pre,
-div.martor-preview pre{border: 1px solid #f0f0f0;padding: 16px;overflow: auto;font-size: 85%;line-height: 1.45;background-color: #f6f8fa;border-radius: 3px}
+div.martor-preview pre{padding: 16px;overflow: auto;font-size: 85%;line-height: 1.45;border-radius: 3px}
 div.martor-preview pre code,
 div.martor-preview pre tt{margin:0;padding:0;background-color:transparent;border:none}
 
@@ -260,6 +259,11 @@ div.enable-living .tab-martor-menu a.item {
 .admonition {
     border-left: 8px solid #fdd040;
     padding: 0px 0px 20px 10px;
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+.codehilite {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
 }
 
 .admonition-title {
@@ -267,5 +271,16 @@ div.enable-living .tab-martor-menu a.item {
     font-size: 19px;
 }
     /*margin: 0 0 0 45px!important;
+
+     */
+.ace_editor {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+    direction: ltr;
+    text-align: left;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
 
 }

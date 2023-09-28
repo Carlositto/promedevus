@@ -1,41 +1,12 @@
 import markdown
-import os
-import json
-import uuid
 
 from django.apps import apps
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
-from django.utils.decorators import method_decorator
-from django.shortcuts import render
-from django.template.loader import render_to_string
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView, View
-from django.views.generic.detail import SingleObjectMixin
-from django.views.decorators.cache import never_cache
 from .forms import PostForm, AttachmentFormset
-
-
-
-
-from martor_markdown_plus.utils import LazyEncoder
-
-
-
-class HomePage(TemplateView):
-    template_name = "devblog/home_page.html"
-
-
-class PostCreate(CreateView):
-    template_name = "devblog/post_create.html"
-    model = apps.get_model('devblog.Post')
-    fields = '__all__'
-
 
 class PostAttachmentCreate(CreateView):
     template_name = "devblog/post_attachment_create.html"
@@ -83,6 +54,15 @@ class PostAttachmentCreate(CreateView):
 class PostsList(ListView):
     template_name = "devblog/posts_list.html"
     model = apps.get_model('devblog.Post')
+
+
+class AdminPostsList(PermissionRequiredMixin, ListView):
+    template_name = "devblog/admin_posts_list.html"
+    model = apps.get_model('devblog.Post')
+    # permission_required = 'devblog.change_post'
+
+    def has_permission(self):
+        return self.request.user.is_superuser
 
 
 class PostDetail(DetailView):
@@ -202,12 +182,24 @@ class CommentLike(View):
 class LoadComments(View):
 
     def get(self, request):
-        print('dasd')
         detail_object = apps.get_model('devblog.Post').objects.get(id=self.request.GET['object_pk'])
         context = {'object': detail_object, 'sort_by': self.request.GET['sort_by']}
         return render(request, 'devblog/load_comments.html', context=context)
 
 
-
 class AboutTemplate(TemplateView):
     template_name = "devblog/about.html"
+
+
+class PostPublish(View):
+    def get(self, request, *args, **kwargs):
+        post = apps.get_model('devblog.Post').objects.get(id=kwargs['post_id'])
+        post.publish_post()
+        return redirect('admin-posts-list')
+
+
+class PostHide(View):
+    def get(self, request, *args, **kwargs):
+        post = apps.get_model('devblog.Post').objects.get(id=kwargs['post_id'])
+        post.hide_post()
+        return redirect('admin-posts-list')

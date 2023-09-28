@@ -20,6 +20,8 @@ class Post(models.Model):
     tags = models.ManyToManyField('Tag', verbose_name='Tags realted to the article', through='PostTag', blank=True)
     category = models.ManyToManyField('Category', verbose_name='Category', through='PostCategory', blank=True)
     date_created = models.DateField(verbose_name='Publication date', default=datetime.date.today())
+    date_published = models.DateField(verbose_name='Publication date', null=True, blank=True)
+    is_published = models.BooleanField(verbose_name='Published', default=False)
 
     class Meta:
         ordering = ['-date_created',]
@@ -27,6 +29,14 @@ class Post(models.Model):
     def has_comments(self):
         return apps.get_model('django_comments.Comment').objects.filter(object_pk=str(self.id)).exists()
 
+    def publish_post(self):
+        self.is_published = True
+        self.date_published = datetime.date.today()
+        self.save()
+
+    def hide_post(self):
+        self.is_published = False
+        self.save()
 
 class Tag(models.Model):
     name = models.CharField(max_length=16, verbose_name="Tag's name")

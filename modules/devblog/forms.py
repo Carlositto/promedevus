@@ -1,6 +1,4 @@
-from django import forms
 from django.forms import ModelForm
-from django.db import models
 from django.forms.models import inlineformset_factory
 from .models import Post, PostAttachment, Tag, Author
 from django_select2.forms import ModelSelect2MultipleWidget

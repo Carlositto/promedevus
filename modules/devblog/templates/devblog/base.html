@@ -1,13 +1,12 @@
 {% load static %}
 <head>
-  {{ form.media }}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="{% static '/css/pygments.css' %}" rel="stylesheet">
   <link href="{% static '/css/materialize.css' %}" rel="stylesheet">
   <link href="{% static '/martor/css/martor.semantic.css' %}" type="text/css" media="all" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="{% static '/css/devblog.css' %}" rel="stylesheet">
 </head>
 <header>
@@ -20,6 +19,9 @@
               <a href="{% url 'posts-list' %}" class="brand-logo center" style="color:#403d39;">Promedevus</a>
             <a href="#" data-target="mobile-demo" style="color:#403d39;" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
+                {% if user.is_superuser %}
+                    <li><a href="{% url 'admin-posts-list' %}" span style="font-weight:bold; color:#403d39">Manage posts</span></a></li>
+                {% endif %}
                 <li><a href="{% url 'posts-list' %}" span style="font-weight:bold; color:#403d39">Posts</span></a></li>
                 <li><a href="{% url 'about-page' %}"><span style="font-weight:bold; color:#403d39">About</span></a></li>
                 {% if request.user.is_authenticated %}
@@ -94,10 +96,9 @@
     </div>
 </footer>
 
-<script src={% static '/martor/js/martor.semantic.js' %}></script>
+<script src="{% static '/martor/js/martor.semantic.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src={% static 'js/jquery.formset.js' %}></script>
+<script src="{% static 'js/jquery.formset.js' %}"></script>
 <script src="/static/js/materialize.js"></script>
-<script type="text/javascript" src="{% static 'fluent_comments/js/ajaxcomments.js' %}"></script>
 <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-{% include 'devblog/devblog_js.html' %}
+{% include "devblog/devblog_js.html" %}
