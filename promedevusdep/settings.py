@@ -25,10 +25,6 @@ sys.path.append(os.path.join(BASE_DIR, 'modules'))
 SECRET_KEY = 'django-insecure-8@_sd*5t_bu6*9to+b)zv8pr+vzx6kl)z3=gr=h8#!2+2c)wyz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -137,16 +133,4 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-STATICS_PATH_PREFIX = "/home/carlos/DEV/promedevusdep/modules/devblog/"
-STATIC_ROOT = '%s/static/' % STATICS_PATH_PREFIX
-STATIC_URL = '/static/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, './media/')
-MEDIA_URL = '/media/'
-
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/posts/list'
-LOGOUT_REDIRECT_URL = '/posts/list'
-#SELECT2_CSS = 'custom/css/select2.css'
+from .sitesettings import *
