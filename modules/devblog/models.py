@@ -1,23 +1,42 @@
 import datetime
 
+from django.apps import apps
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 from martor_markdown_plus.models import MartorField
 
-TARGET_MODELS = ['post', 'comment']
+TARGET_MODELS = ['post', 'comment', 'threadecomment']
+
 
 class Post(models.Model):
     title = models.CharField(max_length=64, verbose_name='Title')
     subtitle = models.CharField(max_length=32, verbose_name='Subtitle', blank=True)
-    short_description = models.CharField(max_length=128, verbose_name='Short description', help_text='This is the text usually shown in the menu or on hover')
+    short_description = models.CharField(max_length=512, verbose_name='Short description', help_text='This is the text usually shown in the menu or on hover')
     body = MartorField(verbose_name='Main body')
     authors = models.ManyToManyField('Author', verbose_name='Authors of the article', through='PostAuthor', blank=True)
     tags = models.ManyToManyField('Tag', verbose_name='Tags realted to the article', through='PostTag', blank=True)
     category = models.ManyToManyField('Category', verbose_name='Category', through='PostCategory', blank=True)
     date_created = models.DateField(verbose_name='Publication date', default=datetime.date.today())
+    date_published = models.DateField(verbose_name='Publication date', null=True, blank=True)
+    is_published = models.BooleanField(verbose_name='Published', default=False)
 
+    class Meta:
+        ordering = ['-date_created',]
+
+    def has_comments(self):
+        return apps.get_model('django_comments.Comment').objects.filter(object_pk=str(self.id)).exists()
+
+    def publish_post(self):
+        self.is_published = True
+        self.date_published = datetime.date.today()
+        self.save()
+
+    def hide_post(self):
+        self.is_published = False
+        self.save()
 
 class Tag(models.Model):
     name = models.CharField(max_length=16, verbose_name="Tag's name")
@@ -60,27 +79,7 @@ class PostAttachment(models.Model):
 
 
 class Like(models.Model):
-    post = models.ForeignKey('Post', verbose_name='Post', on_delete=models.CASCADE, related_name='likes')
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     target_type = models.ForeignKey(ContentType, limit_choices_to={'model__in': TARGET_MODELS}, on_delete=models.PROTECT)
     target_id = models.PositiveIntegerField()
     target_object = GenericForeignKey('target_type', 'target_id')
-
-
-class GenericComment(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    comment_body = models.TextField(verbose_name='Comment body')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
-
-class Comment(GenericComment):
-    post = models.ForeignKey('Post', verbose_name='Post', on_delete=models.CASCADE, related_name='comments')
-
-
-class Reply(GenericComment):
-    comment = models.ForeignKey('Comment', verbose_name='Comment', on_delete=models.CASCADE, related_name='replies')
-

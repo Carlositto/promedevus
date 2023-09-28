@@ -1,0 +1,78 @@
+{% extends 'devblog/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+.user_description {
+    height: 200px;
+    overflow: auto;
+    border-left: 1px solid #cccccc;
+    padding-left: 10px;
+}
+</style>
+<div class="main-body">
+  <div class="col s12 l12">
+    <div class="card horizontal">
+      <div class="card-content" >
+          {% if object.profile_image %}
+          <img src={{ object.profile_image.url }} class="responsive-img circle" style="object-fit: contain;height: 170px; width: 170px;">
+          {% else %}
+          <img src="{% static 'images/default_avatar.jpg' %}">
+          {% endif %}
+      </div>
+      <div class="card-stacked">
+        <div class="card-content" style="height: 225px;">
+            <div class="row">
+                <div class="col l3">
+                    <div class="credentials">
+                        <p>
+                          First name: {{ object.first_name|default:'-' }}
+                        </p>
+                        <p>
+                          Last name: {{ object.last_name|default:'-' }}
+                        </p>
+                        <p>
+                          E-mail: {{ object.email|default:'-' }}
+                        </p>
+                    </div>
+                </div>
+                <div class="col l9">
+                    <div class="user_description">
+                        <p>
+                          Description: {{ object.description|default:'-'|linebreaks }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-action">
+          {% if user == object.user %}
+          <a href="{% url 'blog-user-update' object.id %}">Update info</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col s4 l4">
+            <h2 class="header"> {{ liked_posts.count }} Liked posts <i class="material-icons">favorite</i></h2>
+            <div class="collection">
+                {% for like in liked_posts %}
+                    <a class="collection-item secondary-text" href="{% url 'post-detail' like.target_id %}">{{ like.target_object.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col s4 l4">
+            <h2 class="header">{{ posts_participated.count }} Discussions <i class="material-icons">forum</i></h2>
+            <div class="collection">
+                {% for post in posts_participated %}
+                    <a class="collection-item secondary-text" href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+ </div>
+</div>
+{% endblock %}
+
+{% block content_script %}
+{% endblock %}

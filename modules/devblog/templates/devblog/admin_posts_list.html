@@ -1,0 +1,55 @@
+{% extends 'devblog/base.html' %}
+
+
+{% block content %}
+
+    <div class="hide-on-small-only  col l2">
+    </div>
+    <div class="col s12 l8">
+        <h1 class="center-align"></h1>
+        <ul class="collection">
+        {% for post in object_list.all %}
+            <li class="collection-item">
+                <div>
+                    <a href="{% url 'post-detail' post.id %}"><h3>{{ post.title }}</h3> - Data utworzenia: {{ post.date_created }}{% if post.date_published %} - Data publikacji: {{ post.date_published }} {% endif %}</a>
+                    {% if not post.is_published %}
+                    <a href="{% url 'post-publish' post.id %}" class="secondary-content">
+                        <i class="material-icons">check_circle</i>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'post-hide' post.id %}" class="secondary-content">
+                        <i class="material-icons">not_interested</i>
+                    </a>
+                    {% endif %}
+                </div>
+            </li>
+
+<!--                <div class="list-post">-->
+<!--                    <div class="list-post-secondary-info">-->
+<!--                        {{ post.date_created }} | {{ post.subtitle }}-->
+<!--                    </div>-->
+<!--                    <div class="list-post-title">-->
+<!--                        <h2>-->
+<!--                            {{ post.title }}-->
+<!--                        </h2>-->
+<!--                    </div>-->
+<!--                    <div class="post-short-description">-->
+<!--                        <p>-->
+<!--                        {{ post.short_description }}-->
+<!--                        </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    {% if not post.is_published %}-->
+<!--                        <a href="{% url 'post-publish' post.id %}" class="waves-effect waves-light btn">Publish</a>-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+<!--            </a>-->
+<!--            <br>-->
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="hide-on-small-only  col l2">
+    </div>
+
+{% endblock %}

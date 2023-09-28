@@ -44,7 +44,15 @@ INSTALLED_APPS = [
     'django_select2',
     'django_sass',
     'martor_markdown_plus', #markdown
+    'fluent_comments',  # must be before django_comments
+    'threadedcomments',
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'django_comments',
+    'django.contrib.sites',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,7 +83,13 @@ TEMPLATES = [
     },
 ]
 
+SITE_ID = 1
+FLUENT_COMMENTS_EXCLUDE_FIELDS = ('email', 'url', 'title', 'name')
+
 WSGI_APPLICATION = 'promedevusdep.wsgi.application'
+FLUENT_COMMENTS_FIELD_CSS_CLASS = "input-field"
+
+COMMENTS_APP = 'fluent_comments'
 
 
 # Database

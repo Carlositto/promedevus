@@ -1,5 +1,8 @@
-<blockquote hidden id="errors" style="width: 280px; line-height: 20px; font-size: 12px; color: black;"></blockquote>
-<li><label for="id_username">Username:</label> <input type="text" name="username" autofocus autocapitalize="none" autocomplete="off" maxlength="150" required id="id_username"></li>
-<li><label for="id_password">Password:</label> <input type="password" name="password" autocomplete="off" required id="id_password"></li>
-<button id="sign_in" class='btn-small primary' type="submit">Log in</button>
+<blockquote class="red lighten-5" hidden id="errors" style="width: 220px; line-height: 20px; font-size: 12px; color: black;"></blockquote>
+<li class="no-hover"><label for="id_username">Username:</label> <input type="text" name="username" autofocus autocapitalize="none" autocomplete="off" maxlength="150" required id="id_username"></li>
+<li class="no-hover"><label for="id_password">Password:</label> <input type="password" name="password" autocomplete="off" required id="id_password"></li>
+<li class="no-hover">
+  <button id="sign_in" class='btn-small primary' type="submit">Log in</button>
+  <button onclick="location.href='{% url "register" %}'" type="button" id="sign_up" class='btn-small primary' type="button">Register</button>
+</li>
 <hr>

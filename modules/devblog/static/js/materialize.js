@@ -6569,7 +6569,6 @@ $jscomp.polyfill = function (e, r, p, m) {
           if ($trigger.is('a[href="#' + scrollspy.$el.attr('id') + '"]')) {
             e.preventDefault();
             var offset = scrollspy.$el.offset().top + 1;
-
             anim({
               targets: [document.documentElement, document.body],
               scrollTop: offset - scrollspy.options.scrollOffset,

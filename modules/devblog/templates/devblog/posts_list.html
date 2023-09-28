@@ -3,40 +3,32 @@
 
 {% block content %}
 
-<div class="container">
-     <div class="collection">
-    {% for post in object_list.all %}
-    <a href="{% url 'post-detail' post.id %}" class="collection-item">{{ post.title }}</a>
-    {% endfor %}
-     </div>
-</div>
-<div class="container">
-     <div class="collection">
-    {% for post in object_list.all %}
-    <a href="{% url 'post-detail' post.id %}" class="collection-item">{{ post.title }}</a>
-    {% endfor %}
-     </div>
-</div>
-<div class="container">
-     <div class="collection">
-    {% for post in object_list.all %}
-    <a href="{% url 'post-detail' post.id %}" class="collection-item">{{ post.title }}</a>
-    {% endfor %}
-     </div>
-</div>
-<div class="container">
-     <div class="collection">
-    {% for post in object_list.all %}
-    <a href="{% url 'post-detail' post.id %}" class="collection-item">{{ post.title }}</a>
-    {% endfor %}
-     </div>
-</div>
-<div class="container">
-     <div class="collection">
-    {% for post in object_list.all %}
-    <a href="{% url 'post-detail' post.id %}" class="collection-item">{{ post.title }}</a>
-    {% endfor %}
-     </div>
-</div>
+    <div class="hide-on-small-only  col l2">
+    </div>
+    <div class="col s12 l8">
+        <h1 class="center-align"></h1>
+        {% for post in object_list.all %}
+            <a href="{% url 'post-detail' post.id %}">
+                <div class="list-post">
+                    <div class="list-post-secondary-info">
+                        {{ post.date_created }} | {{ post.subtitle }}
+                    </div>
+                    <div class="list-post-title">
+                        <h2>
+                            {{ post.title }}
+                        </h2>
+                    </div>
+                    <div class="post-short-description">
+                        <p>
+                        {{ post.short_description }}
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <br>
+        {% endfor %}
+    </div>
+    <div class="hide-on-small-only  col l2">
+    </div>
 
 {% endblock %}

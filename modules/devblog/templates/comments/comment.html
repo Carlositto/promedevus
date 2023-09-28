@@ -1,0 +1,78 @@
+{% load i18n static devblog_comments %}
+{% load martortags %}
+
+<style>
+.liked {
+    color: #ffd23f;
+}
+</style>
+<div{% if preview %} id="comment-preview"{% else %} id="c{{ comment.id }}"{% endif %} class="comment-item">
+  {% block comment_item %}
+    {% if preview %}<h3>{% trans "Preview of your comment" %}</h3>{% endif %}
+        {% block comment_title %}
+            <div class="comment-container {% if comment.parent %}reply {% endif %}">
+                <div class="comment-header {% if not comment.parent %}main {% endif %}">
+                    <div class="comment-avatar">
+                        {% if comment.user.bloguser.profile_image %}
+                            <img src={{ comment.user.bloguser.profile_image.url }} class="responsive-img circle" style="object-fit: contain;height: 42px; width: 42px;">
+                        {% else %}
+                        <img src="{% static 'images/default_avatar.jpg' %}" class="circle responsive-img">
+                        {% endif %}
+                    </div>
+                    <div class="comment-username">
+                        <span>{% if comment.name %}{{ comment.name }}{% else %}{% trans "Anonymous" %}{% endif %}</span>
+                        <p>
+                            {% blocktrans with submit_date=comment.submit_date %}on {{ submit_date }}{% endblocktrans %}
+                        </p>
+                    </div>
+                </div>
+                <div class="comment-body {% if not comment.parent %}main {% endif %}">
+                    {{ comment.comment|safe_markdown }}
+                </div>
+                <div class="comment-footer">
+                    <span>
+                        <button type="submit" id="comment_like{{ comment.id }}" class="btn-flat waves-circle">
+                            <i id="comment_like_icon" class="material-icons {% if comment|is_comment_liked:request.user.id %}liked {%endif %}">favorite{%if not comment|is_comment_liked:request.user.id %}_border{% endif %}</i>
+                        </button>
+                    </span>
+                    {% if not comment.is_public %}<span class="comment-moderated-flag">({% trans "moderated" %})</span>{% endif %}
+                    <span>
+                        {% if USE_THREADEDCOMMENTS and not preview %}
+                            <a href="#c{{ comment.id }}" data-comment-id="{{ comment.id }}" class="comment-reply-link">
+                                {% trans "Reply" %}
+                            </a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        {% endblock %}
+  {% endblock %}
+</div>
+
+<script>
+    $('#comment_like'+ {{ comment.id }}).click(function(e) {
+    e.preventDefault()
+    $.ajax({
+    url: '{% url "comment-like"  comment.id  %}',
+        type: "POST",
+        dataType: 'json',
+        data: {
+            post_id: {{ comment.id }},
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function (data) {
+            if (data.liked) {
+                $( "#comment_like" + {{ comment.id }} +'>i' ).replaceWith( '<i class="material-icons liked">favorite</i>' );
+            }
+            else {
+                $( "#comment_like" + {{ comment.id }} +'>i' ).replaceWith( '<i class="material-icons">favorite_border</i>' );
+            };
+        },
+        error: function(data){
+            console.log(data);
+            console.log('Comment could not be liked');
+        }
+
+    });
+});
+</script>
