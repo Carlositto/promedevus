@@ -45,7 +45,7 @@
 
             </div>
         <div class="hide-on-med-and-up">
-            <div class="post-toolbar-large card-panel z-depth-0">
+            <div class="post-toolbar-large z-depth-0">
                  {% csrf_token %}
                  <button type="submit" id="post_like" class="btn-flat post_like">
                      <i id="like_icon" class="material-icons like_icon{% if liked %} liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
@@ -107,7 +107,7 @@
                   <li><a style="font-weight: 600;" class="primary-text" href="#discussion">Discussion  <i style="font-size: 16px"class="material-icons">forum</i></a></li>
     
                 </ul>
-                <div class="post-toolbar card-panel z-depth-0">
+                <div class="post-toolbar z-depth-0">
                      {% csrf_token %}
                      <button type="submit" id="post_like" class="btn-flat post_like">
                          <i id="like_icon" class="material-icons like_icon {% if liked %} liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
