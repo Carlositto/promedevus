@@ -8,9 +8,10 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView, View
 from .forms import PostForm, AttachmentFormset
 
-class PostAttachmentCreate(CreateView):
+class PostAttachmentCreate(PermissionRequiredMixin, CreateView):
     template_name = "devblog/post_attachment_create.html"
     model = apps.get_model('devblog.Post')
+    permission_required = ('devblog.change_post', 'devblog.create_post')
 
     def get(self, request, *args, **kwargs):
         self.object = None

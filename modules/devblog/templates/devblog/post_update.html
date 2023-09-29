@@ -1,7 +1,7 @@
 {% extends 'devblog/base.html' %}
 {% block content %}
-<!--The line below loads all necessary css and js for martor-markdown editor-->
 {{ form.media }}
+<!--The line below loads all necessary css and js for martor-markdown editor-->
   <div class="container">
     <form action="" method="post" enctype="multipart/form-data" id="myForm">
       {% csrf_token %}
