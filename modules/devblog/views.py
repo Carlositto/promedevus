@@ -55,6 +55,7 @@ class PostAttachmentCreate(PermissionRequiredMixin, CreateView):
 class PostsList(ListView):
     template_name = "devblog/posts_list.html"
     model = apps.get_model('devblog.Post')
+    queryset = apps.get_model('devblog.Post').objects.filter(is_published=True)
 
 
 class AdminPostsList(PermissionRequiredMixin, ListView):
