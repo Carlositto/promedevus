@@ -5,9 +5,9 @@ $(document).ready(function(){
     offset: 170
     });
     $('img').addClass('responsive-img'); // This enables image's responsiveness
+    $('img').addClass('materialboxed'); // This enables image's close up
     $('.post-body ul').addClass('browser-default'); // Restore bullets on <ul> since Materialize removes it by its default
     $('.admonition').addClass('z-depth-2'); // Adds Materialize shadow to admonition div
-    // $('pre').addClass('z-depth-2'); // Adds Materialize shadow to code blocks
 
     $('.dropdown-trigger').dropdown({
     coverTrigger: false
