@@ -70,8 +70,8 @@
     </ul>
 
   <ul class="sidenav" id="mobile-demo">
-    <li><a href="#">ME!</a></li>
-    <li><a href="{% url 'posts-list' %}">Articles</span></a></li>
+    <li><a href="{% url 'about-page' %}">About</a></li>
+    <li><a href="{% url 'posts-list' %}">Posts</span></a></li>
   </ul>
 
 
@@ -91,13 +91,11 @@
  <footer class="page-footer secondary">
     <div class="footer-copyright">
       <div class="container">
-      © 2023 KAROL WIATROWSKI
-      <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+      © 2023 Promedevus Karol Wiatrowski
       </div>
     </div>
 </footer>
 
-<script src="{% static '/martor/js/martor.semantic.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="{% static 'js/jquery.formset.js' %}"></script>
 <script src="/static/js/materialize.js"></script>

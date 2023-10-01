@@ -3,11 +3,15 @@ pre {
     padding: 15px;
     overflow: auto;
 }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+table.codehilitetable {box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);background: #403d39;}
+table.codehilitetable td.code{padding-left: 0px; padding-right: 0px; }
+table.codehilitetable td.code pre { color: inherit; background-color: transparent; padding-left: 0px; padding-right: 0px; padding-top: 0px; padding-bottom: 0px; margin: 0px; }
+td.linenos {padding-right: 10px; width: 10px; }
+td.linenos pre { color: inherit; background-color: transparent; padding-left: 0px; padding-right: 10px; padding-top: 0px; padding-bottom: 0px; background: #403d39; color: #8a8b85; margin: 0px;  }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.codehilite .hll { background-color: #ebdbb2 }
+.codehilite .hll { background-color: #625e53 }
 .codehilite { background: #413d39; }
 .codehilite .c { color: #928374; font-style: italic } /* Comment */
 .codehilite .err { color: #282828; background-color: #fb4934 } /* Error */

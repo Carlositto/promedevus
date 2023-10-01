@@ -233,3 +233,15 @@
     color: #ffd23f;
 }
 
+.error-text-main {
+    font-size: 6.1rem;
+    margin: 5rem 0 0 0;
+    line-height: normal;
+}
+
+.error-text-sub {
+    margin: 0;
+}
+
+
+
