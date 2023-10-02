@@ -69,7 +69,11 @@
       font-size: 0.9rem;
   }
 
-  .list-post-short-description {
+  .post-short-description {
+  }
+
+  .float-right {
+      float: right;
   }
 
   .post-title {
