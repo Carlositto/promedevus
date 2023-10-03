@@ -32,7 +32,7 @@
                     </div>
                     <div class="divider">
                     </div>
-                    <div class="post-body">
+                    <div class="post-body" id="post-body">
                         {{ object.body|safe_markdown }}
                         <ul>
                         {% for attachment in attachments %}
@@ -82,7 +82,8 @@
                         {% include  'devblog/load_comments.html' %}
                     </div>
                 {% else %}
-                It's so empty here..
+                    It's so empty here..
+                    {% include  'devblog/load_comments.html' %}
                 {% endif %}
 
             </div>
@@ -182,8 +183,9 @@ window.onscroll = function() {
     myFunction(randomNumber)
 };
 function myFunction(randomNumber){
-    var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    var height = $('.post-body').height();//document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var winScroll = document.body.scrollTop;
+    var comment_section_height = $('.comments-section').height();
+    var height = $('.post-body').height() - comment_section_height;
     var scrolled = (winScroll / height) * 100;
     var flooredScrolled = Math.floor((winScroll / height) * 100);
     document.getElementById("myBar").style.height = scrolled + "%";
