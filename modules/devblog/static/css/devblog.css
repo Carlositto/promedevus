@@ -146,8 +146,26 @@
 .btn-flat:focus {
     background-color: #fdfdfd;
 }
+
 .liked {
     color: #ffd23f;
+}
+
+.liked-animation {
+    animation: pulse-animation 0.5s cubic-bezier(0.24, 0, 0.38, 1) 1;
+    color: #ffd23f;
+}
+
+@keyframes pulse-animation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .comment-avatar {
@@ -233,6 +251,7 @@
 .comment-footer a {
     color: #000000de;
 }
+
 .comment-footer a:hover {
     color: #ffd23f;
 }

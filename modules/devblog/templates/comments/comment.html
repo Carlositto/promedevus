@@ -2,9 +2,9 @@
 {% load martortags %}
 
 <style>
-.liked {
-    color: #ffd23f;
-}
+    .waves-circle {
+        width: 3em;
+    }
 </style>
 <div{% if preview %} id="comment-preview"{% else %} id="c{{ comment.id }}"{% endif %} class="comment-item">
   {% block comment_item %}
@@ -62,7 +62,7 @@
         },
         success: function (data) {
             if (data.liked) {
-                $( "#comment_like" + {{ comment.id }} +'>i' ).replaceWith( '<i class="material-icons liked">favorite</i>' );
+                $( "#comment_like" + {{ comment.id }} +'>i' ).replaceWith( '<i class="material-icons liked-animation">favorite</i>' );
             }
             else {
                 $( "#comment_like" + {{ comment.id }} +'>i' ).replaceWith( '<i class="material-icons">favorite_border</i>' );

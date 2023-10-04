@@ -47,9 +47,9 @@
         <div class="hide-on-med-and-up">
             <div class="post-toolbar-large z-depth-0">
                  {% csrf_token %}
-                 <button type="submit" id="post_like" class="btn-flat post_like">
+                 <a type="submit" id="post_like" class="btn-floating post_like">
                      <i id="like_icon" class="material-icons like_icon{% if liked %} liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
-                 </button>
+                 </a>
             </div>
         </div>
             <div class="comments-section scrollspy" id="discussion">
@@ -135,7 +135,7 @@ $('.post_like').click(function(e) {
         },
         success: function (data) {
             if (data.liked) {
-                $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon liked" style="font-size: 30px;">favorite</i>' );
+                $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon liked-animation" style="font-size: 30px;">favorite</i>' );
             }
             else {
                 $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon" style="font-size: 30px;">favorite_border</i>' );
