@@ -1,8 +1,50 @@
+{% load static socialaccount %}
+<style>
+  .login-with-google-btn {
+
+  padding: 12px 16px 12px 42px;
+  border: none;
+  border-radius: 3px;
+
+  color: #757575;
+  font-size: 14px;
+  font-weight: 500;
+  background-image: url("{% static '/images/google-tile.svg' %}");
+  background-color: white;
+  background-repeat: no-repeat;
+  background-position: 12px 11px;
+
+  &:hover {
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 2px 4px rgba(0, 0, 0, .25);
+    cursor: pointer;
+  }
+
+  &:active {
+    background-color: #eeeeee;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: #eeeeee;
+  }
+
+  &:disabled {
+    filter: grayscale(100%);
+    background-color: #ebebeb;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+    cursor: not-allowed;
+  }
+}
+</style>
 <blockquote class="red lighten-5" hidden id="errors" style="width: 220px; line-height: 20px; font-size: 12px; color: black;"></blockquote>
 <li class="no-hover"><label for="id_username">Username:</label> <input type="text" name="username" autofocus autocapitalize="none" autocomplete="off" maxlength="150" required id="id_username"></li>
 <li class="no-hover"><label for="id_password">Password:</label> <input type="password" name="password" autocomplete="off" required id="id_password"></li>
 <li class="no-hover">
-  <button id="sign_in" class='btn-small primary' type="submit">Log in</button>
-  <button onclick="location.href='{% url "register" %}'" type="button" id="sign_up" class='btn-small primary' type="button">Register</button>
+  <button id="sign_in" style="width: 45%;" class='btn-small primary' type="submit">Log in</button>
+  <button onclick="location.href='{% url "register" %}'" type="button" id="sign_up" class='btn-small primary' style="width: 50%;" >Register</button>
 </li>
-<hr>
+<li class="no-hover">
+  <button onclick="location.href='{% provider_login_url "google" %}'" target="_blank" type="button" class="login-with-google-btn z-depth-1" style="width: inherit;">
+    Sign in with Google
+  </button>
+</li>

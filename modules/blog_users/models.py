@@ -1,9 +1,12 @@
+import requests
 import datetime
 
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 
 from martor_markdown_plus.models import MartorField
 
@@ -28,3 +31,11 @@ class BlogUser(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def save_image_from_url(self, url):
+        r = requests.get(url)
+        img_temp = NamedTemporaryFile(delete=True)
+        img_temp.write(r.content)
+        img_temp.flush()
+
+        self.profile_image.save("avatar.jpg", File(img_temp), save=True)
