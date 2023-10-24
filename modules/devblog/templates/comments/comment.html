@@ -22,7 +22,7 @@
                     <div class="comment-username">
                         <span>{% if comment.name %}{{ comment.name }}{% else %}{% trans "Anonymous" %}{% endif %}</span>
                         <p>
-                            {% blocktrans with submit_date=comment.submit_date %}on {{ submit_date }}{% endblocktrans %}
+                            {{ comment.submit_date|date:"d.m.Y H:i" }}
                         </p>
                     </div>
                 </div>

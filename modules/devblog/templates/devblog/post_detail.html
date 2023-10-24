@@ -47,9 +47,13 @@
         <div class="hide-on-med-and-up">
             <div class="post-toolbar-large z-depth-0">
                  {% csrf_token %}
-                 <a type="submit" id="post_like" class="btn-floating post_like">
-                     <i id="like_icon" class="material-icons like_icon{% if liked %} liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
-                 </a>
+                   <a type="submit" id="post_like" class="btn-floating post_like">
+                       {% if user.is_authenticated %}
+                           <i id="like_icon" class="material-icons like_icon{% if liked %} liked{%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
+                       {% else %}
+                          <i class="material-icons" onclick="M.toast({html: 'Log in to save and like'})" style="font-size: 30px;">favorite_border</i>
+                       {% endif %}
+                   </a>
             </div>
         </div>
             <div class="comments-section scrollspy" id="discussion">
@@ -58,7 +62,7 @@
                     <h6>Drop a comment below!</h6>
                     {% render_comment_form for object %}
                 {% else %}
-                <h6><a class="btn-small primary" id="log_in_discussion" href="#l">Log in</a> to participate in a discussion</h6>
+                <h6><a class="btn-small primary log_in_discussion" id="log_in_discussion" href="#l">Log in</a> to participate in a discussion</h6>
                 {% endif %}
 
                 {% if object.has_comments %}
@@ -79,6 +83,7 @@
                         </div>
                     </div>
                     <div class="loaded_comments" style="margin-top: -130px;">
+                        {% include './comments_preloader.html' %}
                         {% include  'devblog/load_comments.html' %}
                     </div>
                 {% else %}
@@ -110,8 +115,12 @@
                 </ul>
                 <div class="post-toolbar z-depth-0">
                      {% csrf_token %}
-                     <button type="submit" id="post_like" class="btn-flat post_like">
-                         <i id="like_icon" class="material-icons like_icon {% if liked %} liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
+                     <button type="submit" {% if user.is_authenticated %} id="post_like" {% endif %} class="btn-flat post_like">
+                         {% if user.is_authenticated %}
+                            <i id="like_icon" class="material-icons like_icon {% if liked %} liked {%endif %}" style="font-size: 30px;">favorite{%if not liked %}_border{% endif %}</i>
+                         {% else %}
+                            <i id="post_like_icon" class="material-icons" onclick=logInToast(this) style="font-size: 30px;">favorite_border</i>
+                         {% endif %}
                      </button>
                 </div>
             </div>
@@ -123,31 +132,33 @@
 
 {% block content_script %}
 <script>
-$('.post_like').click(function(e) {
-    e.preventDefault()
-    $.ajax({
-    url: '{% url "post-like"  object.id  %}',
-        type: "POST",
-        dataType: 'json',
-        data: {
-            post_id: {{ object.id }},
-            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-        },
-        success: function (data) {
-            if (data.liked) {
-                $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon liked-animation" style="font-size: 30px;">favorite</i>' );
+{% if user.is_authenticated %}
+    $('.post_like').click(function(e) {
+        e.preventDefault()
+        $.ajax({
+        url: '{% url "post-like"  object.id  %}',
+            type: "POST",
+            dataType: 'json',
+            data: {
+                post_id: {{ object.id }},
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (data) {
+                if (data.liked) {
+                    $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon liked-animation" style="font-size: 30px;">favorite</i>' );
+                }
+                else {
+                    $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon" style="font-size: 30px;">favorite_border</i>' );
+                };
+            },
+            error: function(data){
+                console.log(data);
+                console.log('error');
             }
-            else {
-                $( ".like_icon" ).replaceWith( '<i id="like_icon" class="material-icons like_icon" style="font-size: 30px;">favorite_border</i>' );
-            };
-        },
-        error: function(data){
-            console.log(data);
-            console.log('rrorfsdfs');
-        }
 
+        });
     });
-});
+{% endif %}
   $('h1').addClass('section scrollspy'); // This enables table of content's responsiveness
   $('h2').addClass('section scrollspy'); // and weights the font to bold in it
   $('h3').addClass('section scrollspy'); // and weights the font to bold in it
@@ -209,15 +220,17 @@ label.insertAfter($('.materialize-textarea'));
 
 
 $('select#sort_select').on('change', function(e) {
+    $('#comments-preloader').show();
     var sort_by = $(this).val();
-    $.ajax({
-            type: "GET",
-            url: "{% url 'load-comments' %}",
-            data: {'object_pk': {{ object.id }}, 'sort_by': sort_by },
-            success : function(data) {
-                $(".loaded_comments").html(data);
-            }
-    });
+    // $.ajax({
+    //         type: "GET",
+    //         url: "{% url 'load-comments' %}",
+    //         data: {'object_pk': {{ object.id }}, 'sort_by': sort_by },
+    //         success : function(data) {
+    //             $('#comments-preloader').removeClass('active')
+    //             $(".loaded_comments").html(data);
+    //         }
+    // });
 });
   $(document).ready(function(){
     $('select').formSelect({

@@ -1,10 +1,42 @@
 <script type="text/javascript">
+    if ($(".post-toolbar").length) {
+        var post_toolbar_top_val = parseInt($(".post-toolbar").offset().top)
+        var post_toolbar_height_val =  parseInt($(".post-toolbar").outerHeight())
+        var post_toolbar_top_val = post_toolbar_top_val + post_toolbar_height_val + 50
+        var post_toolbar_left_val = parseInt($(".post-toolbar").offset().left)
+        var post_toolbar_total_left_val = post_toolbar_left_val
+    }
     $(function() { // Allows multiple forms to be added to attachments formset
         $('#myForm tbody tr').formset({
             prefix: '{{ attachment_form.prefix }}'
         });
     })
+    function logInToast(elem) {
+        var style = $('<style>div#toast-container:has(div.toc-toast) {top:' + post_toolbar_top_val + 'px!important;left:' + post_toolbar_total_left_val + '!important;right: auto;}</style>')
+        $('html > head').append(style);
+        var toastHTML = '<a class="btn log_in_discussion">Log in</a><span>&nbsp;to like&save</span>';
+        M.toast({html: toastHTML, classes:'toc-toast'});
+
+        var dd = $('#auth').dropdown({
+            constrainWidth: false,
+            coverTrigger: false,
+            closeOnClick: false,
+            autoTrigger: false,
+            alignment: 'left',
+        });
+
+
+        $('.log_in_discussion').click(function(){
+            $('html,body').animate({ scrollTop: 0 }, 'slow');
+            var dropdownInstance = M.Dropdown.getInstance(dd);
+            dropdownInstance.open();
+            M.Toast.dismissAll();
+            return false;
+
+        });
+    }
 $(document).ready(function(){
+  $('.tooltipped').tooltip();
   $('.sidenav').sidenav(); //Sidenav
   $('.pushpin').pushpin({ //Table of content on the post-detail
       top: 100,
@@ -30,7 +62,8 @@ $(document).ready(function(){
       alignment: 'left',
   });
 
-    $('#log_in_discussion').click(function(){
+
+    $('.log_in_discussion').click(function(){
       $('html,body').animate({ scrollTop: 0 }, 'slow');
         var dropdownInstance = M.Dropdown.getInstance(dd);
         dropdownInstance.open();
@@ -80,4 +113,5 @@ $(document).ready(function(){
 $('#sign_in_form').on('keydown', function(event) {
     event.stopPropagation();
 });
+
 </script>

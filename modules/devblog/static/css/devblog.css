@@ -152,11 +152,11 @@
 }
 
 .liked-animation {
-    animation: pulse-animation 0.5s cubic-bezier(0.24, 0, 0.38, 1) 1;
+    animation: like-pulse-animation 0.5s cubic-bezier(0.24, 0, 0.38, 1) 1;
     color: #ffd23f;
 }
 
-@keyframes pulse-animation {
+@keyframes like-pulse-animation {
     0% {
         transform: scale(1);
     }
@@ -266,5 +266,13 @@
     margin: 0;
 }
 
+.toc-toast {
+    background: #fdfdfd;
+    color: black;
+    padding-left: 10px;
+}
 
+.preloader-wrapper {
+    display: none;
+}
 
